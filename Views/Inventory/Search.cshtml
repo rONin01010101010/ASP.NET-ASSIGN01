@@ -1,0 +1,59 @@
+﻿@model List<COMP2139_assign01.Models.Inventory>  
+
+@{
+    ViewBag.Title = "Search Page";
+    Layout = "_Layout";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<form method="get" action="@Url.Action("Search")">
+    <div class="form-group">
+        <label for="Price">Price:</label>
+        <input type="number" step="0.01" name="Price" value="@ViewBag.Price" class="form-control"/>
+    </div>
+
+    <div class="form-group">
+        <label for="Category">Category:</label>
+        <input type="text" name="Category" value="@ViewBag.Category" class="form-control"/>
+    </div>
+
+    <div class="form-group">
+        <label for="Name">Product Name:</label>
+        <input type="text" name="Name" value="@ViewBag.Name" class="form-control"/>
+    </div>
+
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary">Search</button>
+    </div>
+</form>
+
+@if (Model != null && Model.Count() > 0)
+{
+    <h3>Search Results</h3>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Product Name</th>
+            <th>Category</th>
+            <th>Price</th>
+            <th>Quantity</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Name</td>
+                <td>@item.category</td>
+                <td>@item.Price</td>
+                <td>@item.Quantity</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No results found</p>
+}

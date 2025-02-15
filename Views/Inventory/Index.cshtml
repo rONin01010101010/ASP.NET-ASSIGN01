@@ -1,0 +1,49 @@
+﻿@model System.Collections.Generic.List<COMP2139_assign01.Models.Inventory>
+
+@{
+    ViewBag.Title = "Product List";
+    Layout = "_Layout";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<!-- Buttons to navigate to Search and Summary Views -->
+<div class="mb-3">
+    <a href="@Url.Action("Summary", "Inventory")" class="btn btn-info">View Summary</a>
+    <a href="@Url.Action("Search", "Inventory")" class="btn btn-primary">Search Products</a>
+</div>
+
+<a href="@Url.Action("Add", "Inventory")" class="btn btn-success mb-3">Add New Product</a>
+
+<!-- Product Cards -->
+<div class="Add">
+    <div class="row">
+        @foreach (var product in Model)
+        {
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">@product.Name</h5>
+                        <p class="card-text">Category: @product.category</p>
+                        <p class="card-text"><strong>@product.Price.ToString("C")</strong></p>
+                        
+                        <!-- View Details Button -->
+                        <a href="#" class="btn btn-primary">View Details</a>
+
+                        <!-- Edit Button -->
+                        <a href="@Url.Action("Edit", "Inventory", new { id = product.InventoryId })" class="btn btn-warning">
+                            Edit
+                        </a>
+
+                        <!-- Delete Button -->
+                        <a href="@Url.Action("Delete", "Inventory", new { id = product.InventoryId })"
+                           class="btn btn-danger"
+                           onclick="return confirm('Are you sure you want to delete this product?');">
+                            Delete
+                        </a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

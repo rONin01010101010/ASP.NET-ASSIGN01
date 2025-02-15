@@ -1,0 +1,32 @@
+﻿@model COMP2139_assign01.Models.Inventory
+
+@{
+    ViewBag.Title = "Inventory Summary";
+    Layout = "_Layout";
+}
+
+<h2>ViewBag.Title</h2>
+
+<div class="Summary">
+    <div>
+        <h3>Total Products: </h3>
+        <p>@Model.TotalStock</p>
+
+        <h3>Low Stock Items:</h3>
+        <ul>
+            @foreach (var item in Model.LowStockItems)
+            {
+                <li>@item.Name - @item.Quantity</li> 
+            }
+        </ul>
+
+        <h3>Categories:</h3>
+        <ul>
+            @foreach (var category in Model.category)
+            {
+                <li>@category</li>
+            }
+        </ul>
+    </div>
+</div>
+

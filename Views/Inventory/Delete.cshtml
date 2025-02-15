@@ -1,0 +1,24 @@
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model COMP2139_assign01.Models.Inventory
+
+@{
+    ViewBag.Title = "Delete Product";
+    Layout = "_Layout";
+}
+
+<h2 id="DeleteTitle">@ViewBag.Title</h2>  
+
+<h3>Are you sure you want to delete this product?</h3>
+
+<div class="card">
+    <div class="card-body">
+        <h5 class="card-title">@Model.Name</h5>
+        <p class="card-text">Category: @Model.category</p>
+        <p class="card-text"><strong>@Model.Price.ToString("C")</strong></p>
+
+        <form method="post">
+            <input type="submit" value="Delete" class="btn btn-danger" />
+            <a href="@Url.Action("Index", "Inventory")" class="btn btn-secondary">Cancel</a>
+        </form>
+    </div>
+</div>
