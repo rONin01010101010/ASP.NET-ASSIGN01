@@ -1,0 +1,120 @@
+@model IEnumerable<COMP2139_assign01.Models.Product>
+
+@{
+    ViewData["Title"] = "Shop Products";
+}
+
+<div class="container">
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <form asp-action="Index" method="get" class="row g-3">
+                <div class="col-md-5">
+                    <div class="input-group">
+                        <input type="text" name="searchString" value="@ViewBag.SearchString" class="form-control" placeholder="Search products...">
+                        <button class="btn btn-outline-secondary" type="submit">
+                            <i class="bi bi-search"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="col-md-5">
+                    <select name="category" class="form-select" onchange="this.form.submit()">
+                        <option value="">All Categories</option>
+                        @foreach (var category in ViewBag.Categories)
+                        {
+                            <option value="@category.Name" selected="@(ViewBag.CurrentCategory == category.Name)">
+                                @category.Name
+                            </option>
+                        }
+                    </select>
+                </div>
+                @if (!string.IsNullOrEmpty(ViewBag.SearchString) || !string.IsNullOrEmpty(ViewBag.CurrentCategory))
+                {
+                    <div class="col-md-2">
+                        <a asp-action="Index" class="btn btn-outline-secondary w-100">Clear</a>
+                    </div>
+                }
+            </form>
+        </div>
+        <div class="col-md-4 text-end">
+            <a asp-area="Guest" asp-controller="Order" asp-action="Cart" class="btn btn-primary">
+                <i class="bi bi-cart"></i> View Cart
+                <span id="cartCount" class="badge bg-light text-dark">@(Context.RequestServices.GetService<COMP2139_assign01.Services.CartService>()?.GetItemCount() ?? 0)</span>
+            </a>
+        </div>
+    </div>
+
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        @foreach (var item in Model)
+        {
+            <div class="col">
+                <div class="card h-100 shadow-sm">
+                    @if (!string.IsNullOrEmpty(item.ImageUrl))
+                    {
+                        <img src="@item.ImageUrl" class="card-img-top" alt="@item.Name">
+                    }
+                    <div class="card-body">
+                        <h5 class="card-title">@item.Name</h5>
+                        <p class="card-text text-muted">@(item.Description ?? "No description available")</p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="h5 mb-0">@item.Price.ToString("C")</span>
+                            <span class="badge bg-@(item.Quantity > 10 ? "success" : (item.Quantity > 0 ? "warning" : "danger"))">
+                                @(item.Quantity > 0 ? $"{item.Quantity} in stock" : "Out of stock")
+                            </span>
+                        </div>
+                    </div>
+                    <div class="card-footer bg-transparent border-top-0">
+                        <div class="d-grid gap-2">
+                            <a asp-action="Details" asp-route-id="@item.ProductId" class="btn btn-outline-primary">
+                                <i class="bi bi-info-circle"></i> Details
+                            </a>
+                            @if (item.Quantity > 0)
+                            {
+                                <button onclick="addToCart(@item.ProductId)" class="btn btn-primary">
+                                    <i class="bi bi-cart-plus"></i> Add to Cart
+                                </button>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@Html.AntiForgeryToken()
+
+@section Scripts {
+    <script>
+        function addToCart(productId) {
+            $.ajax({
+                url: '/Guest/Order/AddToCart',
+                type: 'POST',
+                data: { 
+                    productId: productId, 
+                    quantity: 1,
+                    __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
+                },
+                success: function(response) {
+                    if (response.success) {
+                        $('#cartCount').text(response.cartCount);
+                        toastr.success('Item added to cart successfully');
+                    } else {
+                        toastr.error(response.message || 'Error adding item to cart');
+                    }
+                },
+                error: function(xhr, status, error) {
+                    toastr.error('Error adding item to cart');
+                    console.error('Error:', error);
+                }
+            });
+        }
+
+        // Initialize toastr options
+        toastr.options = {
+            "closeButton": true,
+            "progressBar": true,
+            "positionClass": "toast-top-right",
+            "timeOut": "3000"
+        };
+    </script>
+}

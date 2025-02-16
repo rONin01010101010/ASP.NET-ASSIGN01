@@ -1,0 +1,77 @@
+@{
+    ViewData["Title"] = "Track Order";
+}
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h1 class="card-title text-center mb-4">Track Your Order</h1>
+                    
+                    <div class="mb-4">
+                        <label for="trackingNumber" class="form-label">Enter your tracking number</label>
+                        <div class="input-group">
+                            <input type="text" id="trackingNumber" class="form-control" 
+                                   placeholder="e.g., ORD-20250215-ABC123">
+                            <button class="btn btn-primary" id="trackButton">
+                                Track Order
+                            </button>
+                        </div>
+                        <div class="form-text">
+                            Your tracking number was provided in your order confirmation email.
+                        </div>
+                    </div>
+
+                    <div id="orderDetails"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const trackButton = document.getElementById('trackButton');
+            const trackingInput = document.getElementById('trackingNumber');
+            const orderDetails = document.getElementById('orderDetails');
+
+            trackButton.addEventListener('click', async function () {
+                const trackingNumber = trackingInput.value.trim();
+                if (!trackingNumber) {
+                    showError('Please enter a tracking number');
+                    return;
+                }
+
+                try {
+                    const response = await fetch(`/Order/TrackOrder?trackingNumber=${encodeURIComponent(trackingNumber)}`);
+                    if (response.ok) {
+                        const html = await response.text();
+                        orderDetails.innerHTML = html;
+                    } else if (response.status === 404) {
+                        showError('Order not found. Please check your tracking number.');
+                    } else {
+                        showError('An error occurred while tracking your order.');
+                    }
+                } catch (error) {
+                    showError('An error occurred while tracking your order.');
+                }
+            });
+
+            trackingInput.addEventListener('keypress', function (e) {
+                if (e.key === 'Enter') {
+                    trackButton.click();
+                }
+            });
+
+            function showError(message) {
+                orderDetails.innerHTML = `
+                    <div class="alert alert-danger mt-3">
+                        ${message}
+                    </div>
+                `;
+            }
+        });
+    </script>
+}

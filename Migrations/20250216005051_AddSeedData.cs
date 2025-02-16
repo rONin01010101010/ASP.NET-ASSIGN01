@@ -5,7 +5,7 @@
 namespace COMP2139_assign01.Migrations
 {
     /// <inheritdoc />
-    public partial class FixForeignKeyRelationship : Migration
+    public partial class AddSeedData : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

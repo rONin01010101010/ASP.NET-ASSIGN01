@@ -1,0 +1,42 @@
+@{
+    ViewData["Title"] = "Track Your Order";
+}
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="card-title mb-0">Track Your Order</h4>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Track" method="post">
+                        <div class="mb-3">
+                            <label for="trackingNumber" class="form-label">Order Tracking Number</label>
+                            <input type="text" id="trackingNumber" name="trackingNumber" class="form-control" 
+                                   placeholder="Enter your tracking number" required>
+                            <div class="form-text">
+                                Enter the tracking number you received after placing your order.
+                            </div>
+                        </div>
+
+                        @if (!ViewData.ModelState.IsValid)
+                        {
+                            <div class="alert alert-danger">
+                                @foreach (var modelState in ViewData.ModelState.Values)
+                                {
+                                    foreach (var error in modelState.Errors)
+                                    {
+                                        <div>@error.ErrorMessage</div>
+                                    }
+                                }
+                            </div>
+                        }
+
+                        <button type="submit" class="btn btn-primary w-100">Track Order</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

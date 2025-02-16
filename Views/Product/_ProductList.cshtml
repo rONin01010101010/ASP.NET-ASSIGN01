@@ -1,0 +1,76 @@
+@model IEnumerable<COMP2139_assign01.Models.Product>
+
+<div class="table-responsive">
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>
+                    <a href="#" class="sort-link text-dark text-decoration-none" data-sort="name">
+                        Name
+                        <i class="bi bi-arrow-down-up"></i>
+                    </a>
+                </th>
+                <th>
+                    <a href="#" class="sort-link text-dark text-decoration-none" data-sort="category">
+                        Category
+                        <i class="bi bi-arrow-down-up"></i>
+                    </a>
+                </th>
+                <th>
+                    <a href="#" class="sort-link text-dark text-decoration-none" data-sort="price">
+                        Price
+                        <i class="bi bi-arrow-down-up"></i>
+                    </a>
+                </th>
+                <th>
+                    <a href="#" class="sort-link text-dark text-decoration-none" data-sort="quantity">
+                        Quantity
+                        <i class="bi bi-arrow-down-up"></i>
+                    </a>
+                </th>
+                <th>Stock Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr class="@(item.Quantity <= item.LowStockThreshold ? "table-warning" : "")">
+                    <td>@item.Name</td>
+                    <td>@(item.Category == null ? "Uncategorized" : item.Category.Name)</td>
+                    <td>@item.Price.ToString("C")</td>
+                    <td>@item.Quantity</td>
+                    <td>
+                        @if (item.Quantity <= item.LowStockThreshold)
+                        {
+                            <span class="badge bg-warning text-dark">Low Stock</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-success">In Stock</span>
+                        }
+                    </td>
+                    <td>
+                        <div class="btn-group" role="group">
+                            <a asp-action="Edit" asp-route-id="@item.ProductId" class="btn btn-sm btn-primary">Edit</a>
+                            <a asp-action="Details" asp-route-id="@item.ProductId" class="btn btn-sm btn-info">Details</a>
+                            <form asp-action="Delete" asp-route-id="@item.ProductId" method="post" style="display: inline;">
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete @item.Name?');">
+                                    Delete
+                                </button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">
+        No products found matching your criteria.
+    </div>
+}

@@ -17,65 +17,189 @@ build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = COMP2139_assign01
 build_property.RootNamespace = COMP2139_assign01
-build_property.ProjectDir = C:\Users\OWNER\RiderProjects\COMP2139-assign01\COMP2139-assign01\
+build_property.ProjectDir = D:\GBC\2139.net\assignment_1\ASP.NET-ASSIGN01\
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 
 build_property.RazorLangVersion = 9.0
 build_property.SupportLocalizedComponentNames = 
 build_property.GenerateRazorMetadataSourceChecksumAttributes = 
-build_property.MSBuildProjectDirectory = C:\Users\OWNER\RiderProjects\COMP2139-assign01\COMP2139-assign01
+build_property.MSBuildProjectDirectory = D:\GBC\2139.net\assignment_1\ASP.NET-ASSIGN01
 build_property._RazorSourceGeneratorDebug = 
 build_property.EffectiveAnalysisLevelStyle = 9.0
 build_property.EnableCodeStyleSeverity = 
 
-[C:/Users/OWNER/RiderProjects/COMP2139-assign01/COMP2139-assign01/Views/Home/Index.cshtml]
+[D:/GBC/2139.net/assignment_1/ASP.NET-ASSIGN01/Areas/Guest/Views/Order/Cart.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcR3Vlc3RcVmlld3NcT3JkZXJcQ2FydC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/GBC/2139.net/assignment_1/ASP.NET-ASSIGN01/Areas/Guest/Views/Order/Checkout.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcR3Vlc3RcVmlld3NcT3JkZXJcQ2hlY2tvdXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/GBC/2139.net/assignment_1/ASP.NET-ASSIGN01/Areas/Guest/Views/Order/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcR3Vlc3RcVmlld3NcT3JkZXJcRGV0YWlscy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/GBC/2139.net/assignment_1/ASP.NET-ASSIGN01/Areas/Guest/Views/Order/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcR3Vlc3RcVmlld3NcT3JkZXJcSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/GBC/2139.net/assignment_1/ASP.NET-ASSIGN01/Areas/Guest/Views/Order/OrderConfirmation.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcR3Vlc3RcVmlld3NcT3JkZXJcT3JkZXJDb25maXJtYXRpb24uY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/GBC/2139.net/assignment_1/ASP.NET-ASSIGN01/Areas/Guest/Views/Product/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcR3Vlc3RcVmlld3NcUHJvZHVjdFxEZXRhaWxzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/GBC/2139.net/assignment_1/ASP.NET-ASSIGN01/Areas/Guest/Views/Product/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcR3Vlc3RcVmlld3NcUHJvZHVjdFxJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/GBC/2139.net/assignment_1/ASP.NET-ASSIGN01/Areas/Guest/Views/Shared/_Layout.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcR3Vlc3RcVmlld3NcU2hhcmVkXF9MYXlvdXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/GBC/2139.net/assignment_1/ASP.NET-ASSIGN01/Areas/Guest/Views/_ViewImports.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcR3Vlc3RcVmlld3NcX1ZpZXdJbXBvcnRzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/GBC/2139.net/assignment_1/ASP.NET-ASSIGN01/Areas/Guest/Views/_ViewStart.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcR3Vlc3RcVmlld3NcX1ZpZXdTdGFydC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/GBC/2139.net/assignment_1/ASP.NET-ASSIGN01/Views/Category/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2F0ZWdvcnlcQ3JlYXRlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/GBC/2139.net/assignment_1/ASP.NET-ASSIGN01/Views/Category/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2F0ZWdvcnlcRWRpdC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/GBC/2139.net/assignment_1/ASP.NET-ASSIGN01/Views/Category/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2F0ZWdvcnlcSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/GBC/2139.net/assignment_1/ASP.NET-ASSIGN01/Views/GuestOrder/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcR3Vlc3RPcmRlclxEZXRhaWxzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/GBC/2139.net/assignment_1/ASP.NET-ASSIGN01/Views/GuestOrder/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcR3Vlc3RPcmRlclxJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/GBC/2139.net/assignment_1/ASP.NET-ASSIGN01/Views/Guest/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcR3Vlc3RcRGV0YWlscy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/GBC/2139.net/assignment_1/ASP.NET-ASSIGN01/Views/Guest/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcR3Vlc3RcSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/GBC/2139.net/assignment_1/ASP.NET-ASSIGN01/Views/Home/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/OWNER/RiderProjects/COMP2139-assign01/COMP2139-assign01/Views/Home/Privacy.cshtml]
+[D:/GBC/2139.net/assignment_1/ASP.NET-ASSIGN01/Views/Home/Privacy.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxQcml2YWN5LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/OWNER/RiderProjects/COMP2139-assign01/COMP2139-assign01/Views/Inventory/Add.cshtml]
+[D:/GBC/2139.net/assignment_1/ASP.NET-ASSIGN01/Views/Inventory/Add.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSW52ZW50b3J5XEFkZC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/OWNER/RiderProjects/COMP2139-assign01/COMP2139-assign01/Views/Inventory/Delete.cshtml]
+[D:/GBC/2139.net/assignment_1/ASP.NET-ASSIGN01/Views/Inventory/Delete.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSW52ZW50b3J5XERlbGV0ZS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/OWNER/RiderProjects/COMP2139-assign01/COMP2139-assign01/Views/Inventory/Edit.cshtml]
+[D:/GBC/2139.net/assignment_1/ASP.NET-ASSIGN01/Views/Inventory/Edit.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSW52ZW50b3J5XEVkaXQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/OWNER/RiderProjects/COMP2139-assign01/COMP2139-assign01/Views/Inventory/Index.cshtml]
+[D:/GBC/2139.net/assignment_1/ASP.NET-ASSIGN01/Views/Inventory/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSW52ZW50b3J5XEluZGV4LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/OWNER/RiderProjects/COMP2139-assign01/COMP2139-assign01/Views/Inventory/Search.cshtml]
+[D:/GBC/2139.net/assignment_1/ASP.NET-ASSIGN01/Views/Inventory/Search.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSW52ZW50b3J5XFNlYXJjaC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/OWNER/RiderProjects/COMP2139-assign01/COMP2139-assign01/Views/Inventory/Summary.cshtml]
+[D:/GBC/2139.net/assignment_1/ASP.NET-ASSIGN01/Views/Inventory/Summary.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSW52ZW50b3J5XFN1bW1hcnkuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/OWNER/RiderProjects/COMP2139-assign01/COMP2139-assign01/Views/Shared/Error.cshtml]
+[D:/GBC/2139.net/assignment_1/ASP.NET-ASSIGN01/Views/Order/Cart.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcT3JkZXJcQ2FydC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/GBC/2139.net/assignment_1/ASP.NET-ASSIGN01/Views/Order/Checkout.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcT3JkZXJcQ2hlY2tvdXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/GBC/2139.net/assignment_1/ASP.NET-ASSIGN01/Views/Order/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcT3JkZXJcRGV0YWlscy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/GBC/2139.net/assignment_1/ASP.NET-ASSIGN01/Views/Order/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcT3JkZXJcRWRpdC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/GBC/2139.net/assignment_1/ASP.NET-ASSIGN01/Views/Order/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcT3JkZXJcSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/GBC/2139.net/assignment_1/ASP.NET-ASSIGN01/Views/Order/OrderConfirmation.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcT3JkZXJcT3JkZXJDb25maXJtYXRpb24uY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/GBC/2139.net/assignment_1/ASP.NET-ASSIGN01/Views/Order/Track.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcT3JkZXJcVHJhY2suY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/GBC/2139.net/assignment_1/ASP.NET-ASSIGN01/Views/Order/_OrderDetails.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcT3JkZXJcX09yZGVyRGV0YWlscy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/GBC/2139.net/assignment_1/ASP.NET-ASSIGN01/Views/Product/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvZHVjdFxDcmVhdGUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/GBC/2139.net/assignment_1/ASP.NET-ASSIGN01/Views/Product/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvZHVjdFxEZXRhaWxzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/GBC/2139.net/assignment_1/ASP.NET-ASSIGN01/Views/Product/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvZHVjdFxFZGl0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/GBC/2139.net/assignment_1/ASP.NET-ASSIGN01/Views/Product/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvZHVjdFxJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/GBC/2139.net/assignment_1/ASP.NET-ASSIGN01/Views/Product/_ProductList.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvZHVjdFxfUHJvZHVjdExpc3QuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/GBC/2139.net/assignment_1/ASP.NET-ASSIGN01/Views/Shared/Components/Cart/Default.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXENvbXBvbmVudHNcQ2FydFxEZWZhdWx0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/GBC/2139.net/assignment_1/ASP.NET-ASSIGN01/Views/Shared/Error.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXEVycm9yLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/OWNER/RiderProjects/COMP2139-assign01/COMP2139-assign01/Views/Shared/_ValidationScriptsPartial.cshtml]
+[D:/GBC/2139.net/assignment_1/ASP.NET-ASSIGN01/Views/Shared/_ValidationScriptsPartial.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9WYWxpZGF0aW9uU2NyaXB0c1BhcnRpYWwuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/OWNER/RiderProjects/COMP2139-assign01/COMP2139-assign01/Views/_ViewImports.cshtml]
+[D:/GBC/2139.net/assignment_1/ASP.NET-ASSIGN01/Views/_ViewImports.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdJbXBvcnRzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/OWNER/RiderProjects/COMP2139-assign01/COMP2139-assign01/Views/_ViewStart.cshtml]
+[D:/GBC/2139.net/assignment_1/ASP.NET-ASSIGN01/Views/_ViewStart.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdTdGFydC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/OWNER/RiderProjects/COMP2139-assign01/COMP2139-assign01/Views/Shared/_Layout.cshtml]
+[D:/GBC/2139.net/assignment_1/ASP.NET-ASSIGN01/Views/Shared/_Layout.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9MYXlvdXQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = b-r3ivl7zjdh

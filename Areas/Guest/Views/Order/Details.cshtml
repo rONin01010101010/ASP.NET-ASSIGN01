@@ -1,0 +1,131 @@
+@model COMP2139_assign01.Models.Order
+
+@{
+    ViewData["Title"] = "Order Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container">
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a asp-area="Guest" asp-controller="Order" asp-action="Index">Order Tracking</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Order Details</li>
+        </ol>
+    </nav>
+
+    <div class="card shadow-sm">
+        <div class="card-header bg-success text-white">
+            <div class="d-flex justify-content-between align-items-center">
+                <h4 class="mb-0">Order Details</h4>
+                <div>
+                    <span class="badge bg-light text-dark">
+                        <i class="bi bi-box-seam me-2"></i>@Model.TrackingNumber
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                <i class="bi bi-info-circle me-2"></i>Order Information
+                            </h5>
+                            <hr>
+                            <dl class="row">
+                                <dt class="col-sm-4">Order Number</dt>
+                                <dd class="col-sm-8">@Model.TrackingNumber</dd>
+
+                                <dt class="col-sm-4">Order Date</dt>
+                                <dd class="col-sm-8">@Model.OrderDate.ToString("MMM dd, yyyy HH:mm")</dd>
+
+                                <dt class="col-sm-4">Status</dt>
+                                <dd class="col-sm-8">
+                                    <span class="badge bg-@(Model.Status switch {
+                                        OrderStatus.Pending => "warning",
+                                        OrderStatus.Processing => "info",
+                                        OrderStatus.Shipped => "primary",
+                                        OrderStatus.Delivered => "success",
+                                        OrderStatus.Cancelled => "danger",
+                                        _ => "secondary"
+                                    })">@Model.Status</span>
+                                </dd>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                <i class="bi bi-person me-2"></i>Guest Information
+                            </h5>
+                            <hr>
+                            <dl class="row">
+                                <dt class="col-sm-4">Name</dt>
+                                <dd class="col-sm-8">@Model.GuestName</dd>
+
+                                <dt class="col-sm-4">Email</dt>
+                                <dd class="col-sm-8">@Model.GuestEmail</dd>
+
+                                <dt class="col-sm-4">Phone</dt>
+                                <dd class="col-sm-8">@(string.IsNullOrEmpty(Model.GuestPhone) ? "Not provided" : Model.GuestPhone)</dd>
+
+                                <dt class="col-sm-4">Shipping Address</dt>
+                                <dd class="col-sm-8">@Model.ShippingAddress</dd>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <i class="bi bi-cart me-2"></i>Order Items
+                    </h5>
+                    <hr>
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Product</th>
+                                    <th>Price</th>
+                                    <th>Quantity</th>
+                                    <th class="text-end">Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.OrderItems)
+                                {
+                                    <tr>
+                                        <td>@(item.Product?.Name ?? "Unknown Product")</td>
+                                        <td>@item.UnitPrice.ToString("C")</td>
+                                        <td>@item.Quantity</td>
+                                        <td class="text-end">@((item.UnitPrice * item.Quantity).ToString("C"))</td>
+                                    </tr>
+                                }
+                            </tbody>
+                            <tfoot class="table-light">
+                                <tr>
+                                    <th colspan="3" class="text-end"><strong>Total:</strong></th>
+                                    <th class="text-end"><strong>@Model.Total.ToString("C")</strong></th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-4 text-center">
+                <a asp-area="Guest" asp-controller="Order" asp-action="Index" class="btn btn-outline-primary">
+                    <i class="bi bi-arrow-left me-2"></i>Track Another Order
+                </a>
+                <a href="mailto:support@smartinventory.com" class="btn btn-outline-secondary ms-2">
+                    <i class="bi bi-envelope me-2"></i>Need Help?
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

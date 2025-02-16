@@ -1,0 +1,57 @@
+@{
+    ViewData["Title"] = "Track Your Order";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="card-title mb-0">Track Your Order</h4>
+                </div>
+                <div class="card-body">
+                    <form asp-area="Guest" asp-controller="Order" asp-action="Track" method="post">
+                        <div class="mb-3">
+                            <label for="trackingNumber" class="form-label">Order Tracking Number</label>
+                            <div class="input-group">
+                                <span class="input-group-text">
+                                    <i class="bi bi-search"></i>
+                                </span>
+                                <input type="text" id="trackingNumber" name="trackingNumber" class="form-control" 
+                                       placeholder="Enter your tracking number" required>
+                            </div>
+                            <div class="form-text text-muted">
+                                Enter the tracking number you received after placing your order.
+                            </div>
+                        </div>
+
+                        @if (!ViewData.ModelState.IsValid)
+                        {
+                            <div class="alert alert-danger">
+                                @foreach (var modelState in ViewData.ModelState.Values)
+                                {
+                                    foreach (var error in modelState.Errors)
+                                    {
+                                        <div>@error.ErrorMessage</div>
+                                    }
+                                }
+                            </div>
+                        }
+
+                        <button type="submit" class="btn btn-primary w-100">
+                            <i class="bi bi-box-seam me-2"></i>Track Order
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="text-center mt-4">
+                <p class="text-muted">Need help? Contact our support team</p>
+                <a href="mailto:support@smartinventory.com" class="btn btn-outline-secondary">
+                    <i class="bi bi-envelope me-2"></i>Contact Support
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

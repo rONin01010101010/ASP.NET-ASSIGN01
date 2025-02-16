@@ -1,0 +1,209 @@
+@model IEnumerable<COMP2139_assign01.Models.Product>
+
+<div class="container">
+    <h1 class="mb-4">Products</h1>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <a asp-action="Create" class="btn btn-primary">Create New Product</a>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <!-- Search and Filters -->
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Filters</h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label for="searchTerm" class="form-label">Search</label>
+                        <input type="text" id="searchTerm" class="form-control" 
+                               value="@ViewBag.CurrentSearchTerm" placeholder="Search by name, SKU, or description...">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="categoryId" class="form-label">Category</label>
+                        <select id="categoryId" class="form-select">
+                            <option value="">All Categories</option>
+                            @foreach (var category in ViewBag.Categories)
+                            {
+                                if (ViewBag.CurrentCategoryId == category.CategoryId)
+                                {
+                                    <option value="@category.CategoryId" selected>@category.Name</option>
+                                }
+                                else
+                                {
+                                    <option value="@category.CategoryId">@category.Name</option>
+                                }
+                            }
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Price Range</label>
+                        <div class="input-group mb-2">
+                            <span class="input-group-text">$</span>
+                            <input type="number" id="minPrice" class="form-control" 
+                                   value="@ViewBag.CurrentMinPrice" placeholder="Min" min="0" step="0.01">
+                        </div>
+                        <div class="input-group">
+                            <span class="input-group-text">$</span>
+                            <input type="number" id="maxPrice" class="form-control" 
+                                   value="@ViewBag.CurrentMaxPrice" placeholder="Max" min="0" step="0.01">
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <div class="form-check">
+                            <input type="checkbox" id="lowStock" class="form-check-input" 
+                                   @(ViewBag.CurrentLowStock == true ? "checked" : "")>
+                            <label class="form-check-label" for="lowStock">
+                                Show Low Stock Items Only
+                            </label>
+                        </div>
+                    </div>
+
+                    <button id="resetFilters" class="btn btn-outline-secondary w-100">
+                        Reset Filters
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Product List -->
+        <div class="col-md-9">
+            <div id="productList">
+                @await Html.PartialAsync("_ProductList", Model)
+            </div>
+        </div>
+    </div>
+</div>
+
+<input type="hidden" id="currentSort" value="@ViewBag.CurrentSortBy" />
+
+@section Scripts {
+    <script>
+        // Debounce function
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+
+        // Function to update product list
+        async function updateProducts() {
+            const searchTerm = document.getElementById('searchTerm').value;
+            const categoryId = document.getElementById('categoryId').value;
+            const minPrice = document.getElementById('minPrice').value;
+            const maxPrice = document.getElementById('maxPrice').value;
+            const lowStock = document.getElementById('lowStock').checked;
+            const sortBy = document.getElementById('currentSort').value;
+
+            try {
+                const response = await fetch(`/Product/Search?${new URLSearchParams({
+                    searchTerm,
+                    categoryId,
+                    minPrice,
+                    maxPrice,
+                    lowStock,
+                    sortBy
+                })}`);
+
+                if (response.ok) {
+                    const html = await response.text();
+                    document.getElementById('productList').innerHTML = html;
+                    updateSortIcons(sortBy);
+                } else {
+                    const error = await response.json();
+                    console.error('Error:', error);
+                }
+            } catch (error) {
+                console.error('Error updating products:', error);
+            }
+        }
+
+        function updateSortIcons(currentSort) {
+            document.querySelectorAll('.sort-link').forEach(link => {
+                const sortType = link.dataset.sort;
+                const icon = link.querySelector('i');
+                
+                if (currentSort === sortType) {
+                    icon.className = 'bi bi-arrow-up';
+                } else if (currentSort === `${sortType}_desc`) {
+                    icon.className = 'bi bi-arrow-down';
+                } else {
+                    icon.className = 'bi bi-arrow-down-up';
+                }
+            });
+        }
+
+        // Event listeners
+        document.addEventListener('DOMContentLoaded', () => {
+            // Add debounced event listeners
+            const debouncedUpdate = debounce(updateProducts, 300);
+
+            document.getElementById('searchTerm').addEventListener('input', debouncedUpdate);
+            document.getElementById('categoryId').addEventListener('change', updateProducts);
+            document.getElementById('minPrice').addEventListener('input', debouncedUpdate);
+            document.getElementById('maxPrice').addEventListener('input', debouncedUpdate);
+            document.getElementById('lowStock').addEventListener('change', updateProducts);
+
+            // Initialize sort icons
+            const currentSort = document.getElementById('currentSort').value;
+            if (currentSort) {
+                updateSortIcons(currentSort);
+            }
+
+            // Sort links - Use event delegation for dynamic content
+            document.addEventListener('click', (e) => {
+                const sortLink = e.target.closest('.sort-link');
+                if (sortLink) {
+                    e.preventDefault();
+                    const sortType = sortLink.dataset.sort;
+                    const currentSort = document.getElementById('currentSort').value;
+                    
+                    // Toggle sort direction
+                    const newSort = currentSort === sortType ? `${sortType}_desc` : sortType;
+                    document.getElementById('currentSort').value = newSort;
+                    
+                    updateProducts();
+                }
+            });
+
+            // Reset filters
+            document.getElementById('resetFilters').addEventListener('click', () => {
+                document.getElementById('searchTerm').value = '';
+                document.getElementById('categoryId').value = '';
+                document.getElementById('minPrice').value = '';
+                document.getElementById('maxPrice').value = '';
+                document.getElementById('lowStock').checked = false;
+                document.getElementById('currentSort').value = '';
+                updateProducts();
+            });
+        });
+
+        // Auto-hide alerts after 5 seconds
+        setTimeout(() => {
+            document.querySelectorAll('.alert').forEach(alert => {
+                const bsAlert = new bootstrap.Alert(alert);
+                bsAlert.close();
+            });
+        }, 5000);
+    </script>
+}

@@ -1,0 +1,125 @@
+@model COMP2139_assign01.Models.Product
+
+<div class="container">
+    <div class="row mb-4">
+        <div class="col">
+            <h1>Product Details</h1>
+            <a asp-action="Index" class="btn btn-outline-secondary">Back to Products</a>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">@Model.Name</h5>
+                </div>
+                <div class="card-body">
+                    <dl class="row">
+                        <dt class="col-sm-4">@Html.DisplayNameFor(model => model.SKU)</dt>
+                        <dd class="col-sm-8">@Html.DisplayFor(model => model.SKU)</dd>
+
+                        <dt class="col-sm-4">@Html.DisplayNameFor(model => model.Category)</dt>
+                        <dd class="col-sm-8">@Html.DisplayFor(model => model.Category.Name)</dd>
+
+                        <dt class="col-sm-4">@Html.DisplayNameFor(model => model.Price)</dt>
+                        <dd class="col-sm-8">@Html.DisplayFor(model => model.Price)</dd>
+
+                        <dt class="col-sm-4">Availability</dt>
+                        <dd class="col-sm-8">
+                            @if (Model.Quantity > 0)
+                            {
+                                <span class="badge bg-success">In Stock</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-danger">Out of Stock</span>
+                            }
+                        </dd>
+                    </dl>
+
+                    <div class="mt-4">
+                        <h6>Description</h6>
+                        <p>@Html.DisplayFor(model => model.Description)</p>
+                    </div>
+
+                    @if (Model.Quantity > 0)
+                    {
+                        <div class="mt-4">
+                            <form class="row g-3 align-items-end">
+                                <div class="col-auto">
+                                    <label for="quantity" class="form-label">Quantity</label>
+                                    <input type="number" class="form-control" id="quantity" 
+                                           min="1" max="@Model.Quantity" value="1">
+                                </div>
+                                <div class="col-auto">
+                                    <button type="button" class="btn btn-primary add-to-cart" 
+                                            data-product-id="@Model.ProductId">
+                                        Add to Cart
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add to Cart Modal -->
+<div class="modal fade" id="addToCartModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Success!</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p>Product has been added to your cart.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Continue Shopping</button>
+                <a href="/Order/Cart" class="btn btn-primary">View Cart</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const addToCartBtn = document.querySelector('.add-to-cart');
+            if (addToCartBtn) {
+                addToCartBtn.addEventListener('click', async () => {
+                    const productId = addToCartBtn.dataset.productId;
+                    const quantity = parseInt(document.getElementById('quantity').value);
+
+                    if (quantity < 1) {
+                        alert('Please enter a valid quantity');
+                        return;
+                    }
+
+                    try {
+                        const response = await fetch('/Order/AddToCart', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({ productId, quantity })
+                        });
+
+                        const data = await response.json();
+                        if (data.success) {
+                            const modal = new bootstrap.Modal(document.getElementById('addToCartModal'));
+                            modal.show();
+                        }
+                    } catch (error) {
+                        console.error('Error adding to cart:', error);
+                        alert('An error occurred while adding the product to cart.');
+                    }
+                });
+            }
+        });
+    </script>
+}

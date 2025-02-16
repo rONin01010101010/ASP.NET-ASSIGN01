@@ -1,0 +1,234 @@
+@model IEnumerable<COMP2139_assign01.Models.Product>
+
+<div class="container">
+    <h1 class="mb-4">Our Products</h1>
+
+    <div class="row mb-4">
+        <!-- Search and Filters -->
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Filters</h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label for="searchTerm" class="form-label">Search</label>
+                        <input type="text" id="searchTerm" class="form-control" 
+                               value="@ViewBag.CurrentSearchTerm" placeholder="Search by name, SKU, or description...">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="categoryId" class="form-label">Category</label>
+                        <select id="categoryId" class="form-select">
+                            <option value="">All Categories</option>
+                            @foreach (var category in ViewBag.Categories)
+                            {
+                                if (ViewBag.CurrentCategoryId == category.CategoryId)
+                                {
+                                    <option value="@category.CategoryId" selected>@category.Name</option>
+                                }
+                                else
+                                {
+                                    <option value="@category.CategoryId">@category.Name</option>
+                                }
+                            }
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Price Range</label>
+                        <div class="input-group mb-2">
+                            <span class="input-group-text">$</span>
+                            <input type="number" id="minPrice" class="form-control" 
+                                   value="@ViewBag.CurrentMinPrice" placeholder="Min" min="0" step="0.01">
+                        </div>
+                        <div class="input-group">
+                            <span class="input-group-text">$</span>
+                            <input type="number" id="maxPrice" class="form-control" 
+                                   value="@ViewBag.CurrentMaxPrice" placeholder="Max" min="0" step="0.01">
+                        </div>
+                    </div>
+
+                    <button id="resetFilters" class="btn btn-outline-secondary w-100">
+                        Reset Filters
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Product List -->
+        <div class="col-md-9">
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>
+                                <a href="#" class="sort-link text-dark text-decoration-none" data-sort="name">
+                                    @Html.DisplayNameFor(model => model.Name)
+                                    <i class="bi bi-arrow-down-up"></i>
+                                </a>
+                            </th>
+                            <th>
+                                <a href="#" class="sort-link text-dark text-decoration-none" data-sort="category">
+                                    @Html.DisplayNameFor(model => model.Category)
+                                    <i class="bi bi-arrow-down-up"></i>
+                                </a>
+                            </th>
+                            <th>
+                                <a href="#" class="sort-link text-dark text-decoration-none" data-sort="price">
+                                    @Html.DisplayNameFor(model => model.Price)
+                                    <i class="bi bi-arrow-down-up"></i>
+                                </a>
+                            </th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@Html.DisplayFor(modelItem => item.Name)</td>
+                                <td>@Html.DisplayFor(modelItem => item.Category.Name)</td>
+                                <td>@Html.DisplayFor(modelItem => item.Price)</td>
+                                <td>
+                                    <div class="btn-group" role="group">
+                                        <a asp-controller="Product" asp-action="Details" asp-route-id="@item.ProductId" 
+                                           class="btn btn-sm btn-outline-primary">View Details</a>
+                                        <button type="button" class="btn btn-sm btn-outline-success add-to-cart"
+                                                data-product-id="@item.ProductId">
+                                            Add to Cart
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            @if (!Model.Any())
+            {
+                <div class="alert alert-info">
+                    No products found matching your criteria.
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<input type="hidden" id="currentSort" value="@ViewBag.CurrentSortBy" />
+
+@section Scripts {
+    <script>
+        // Debounce function
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+
+        // Function to update products list
+        async function updateProducts() {
+            const searchTerm = document.getElementById('searchTerm').value;
+            const categoryId = document.getElementById('categoryId').value;
+            const minPrice = document.getElementById('minPrice').value;
+            const maxPrice = document.getElementById('maxPrice').value;
+            const sortBy = document.getElementById('currentSort').value;
+
+            const params = new URLSearchParams({
+                searchTerm,
+                categoryId,
+                minPrice,
+                maxPrice,
+                sortBy
+            });
+
+            window.location.href = `/Guest?${params}`;
+        }
+
+        // Event listeners
+        document.addEventListener('DOMContentLoaded', () => {
+            // Add debounced event listeners
+            const debouncedUpdate = debounce(updateProducts, 300);
+
+            document.getElementById('searchTerm').addEventListener('input', debouncedUpdate);
+            document.getElementById('categoryId').addEventListener('change', updateProducts);
+            document.getElementById('minPrice').addEventListener('input', debouncedUpdate);
+            document.getElementById('maxPrice').addEventListener('input', debouncedUpdate);
+
+            // Sort links
+            document.querySelectorAll('.sort-link').forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const sortType = e.currentTarget.dataset.sort;
+                    const currentSort = document.getElementById('currentSort').value;
+                    
+                    // Toggle sort direction
+                    const newSort = currentSort === sortType ? `${sortType}_desc` : sortType;
+                    document.getElementById('currentSort').value = newSort;
+                    
+                    updateProducts();
+                });
+            });
+
+            // Reset filters
+            document.getElementById('resetFilters').addEventListener('click', () => {
+                document.getElementById('searchTerm').value = '';
+                document.getElementById('categoryId').value = '';
+                document.getElementById('minPrice').value = '';
+                document.getElementById('maxPrice').value = '';
+                document.getElementById('currentSort').value = '';
+                updateProducts();
+            });
+
+            // Add to cart functionality
+            document.querySelectorAll('.add-to-cart').forEach(button => {
+                button.addEventListener('click', async () => {
+                    const productId = button.dataset.productId;
+                    try {
+                        const response = await fetch('/Order/AddToCart', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({ productId, quantity: 1 })
+                        });
+
+                        const data = await response.json();
+                        if (data.success) {
+                            // Show success message
+                            const toast = document.createElement('div');
+                            toast.className = 'toast position-fixed bottom-0 end-0 m-3';
+                            toast.innerHTML = `
+                                <div class="toast-header bg-success text-white">
+                                    <strong class="me-auto">Success</strong>
+                                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast"></button>
+                                </div>
+                                <div class="toast-body">
+                                    Product added to cart successfully!
+                                </div>
+                            `;
+                            document.body.appendChild(toast);
+                            const bsToast = new bootstrap.Toast(toast);
+                            bsToast.show();
+
+                            // Remove toast after it's hidden
+                            toast.addEventListener('hidden.bs.toast', () => {
+                                toast.remove();
+                            });
+                        }
+                    } catch (error) {
+                        console.error('Error adding to cart:', error);
+                        alert('An error occurred while adding the product to cart.');
+                    }
+                });
+            });
+        });
+    </script>
+}

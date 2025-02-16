@@ -1,0 +1,92 @@
+@model List<COMP2139_assign01.Models.CartItemViewModel>
+
+<div class="container mt-4">
+    <h2>Shopping Cart</h2>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info">
+            Your cart is empty. <a asp-area="Guest" asp-controller="Product" asp-action="Index">Continue shopping</a>
+        </div>
+    }
+    else
+    {
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>Price</th>
+                        <th>Quantity</th>
+                        <th>Total</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <div>
+                                        <h6 class="mb-0">@item.Name</h6>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>${@item.Price:F2}</td>
+                            <td style="width: 150px;">
+                                <form asp-area="Guest" asp-controller="Order" asp-action="UpdateQuantity" method="post" class="d-flex align-items-center">
+                                    <input type="hidden" name="productId" value="@item.ProductId">
+                                    <input type="number" name="quantity" value="@item.Quantity" min="1"
+                                           class="form-control form-control-sm" style="width: 70px;"
+                                           onchange="this.form.submit()">
+                                </form>
+                            </td>
+                            <td>${@item.Total:F2}</td>
+                            <td>
+                                <form asp-area="Guest" asp-controller="Order" asp-action="RemoveFromCart" method="post" style="display: inline;">
+                                    <input type="hidden" name="productId" value="@item.ProductId">
+                                    <button type="submit" class="btn btn-sm btn-outline-danger">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="3" class="text-end"><strong>Total:</strong></td>
+                        <td><strong>${@Model.Sum(i => i.Total):F2}</strong></td>
+                        <td></td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+
+        <div class="d-flex justify-content-between mt-4">
+            <a asp-area="Guest" asp-controller="Product" asp-action="Index" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-left"></i> Continue Shopping
+            </a>
+            <a asp-area="Guest" asp-controller="Order" asp-action="Checkout" class="btn btn-primary">
+                Proceed to Checkout <i class="bi bi-arrow-right"></i>
+            </a>
+        </div>
+    }
+</div>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show mt-3" role="alert">
+        @TempData["Success"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show mt-3" role="alert">
+        @TempData["Error"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}

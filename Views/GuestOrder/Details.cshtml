@@ -1,0 +1,72 @@
+@model COMP2139_assign01.Models.Order
+
+@{
+    ViewData["Title"] = "Order Details";
+}
+
+<div class="container">
+    <div class="card">
+        <div class="card-header bg-success text-white">
+            <div class="d-flex justify-content-between align-items-center">
+                <h4 class="mb-0">Order Details</h4>
+                <span class="badge bg-light text-dark">@Model.TrackingNumber</span>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <h5>Order Information</h5>
+                    <p class="mb-1"><strong>Order Date:</strong> @Model.OrderDate.ToString("MMM dd, yyyy HH:mm")</p>
+                    <p class="mb-1"><strong>Status:</strong> <span class="badge bg-success">Confirmed</span></p>
+                    <p class="mb-1"><strong>Tracking Number:</strong> @Model.TrackingNumber</p>
+                </div>
+                <div class="col-md-6">
+                    <h5>Guest Information</h5>
+                    <p class="mb-1"><strong>Name:</strong> @Model.GuestName</p>
+                    <p class="mb-1"><strong>Email:</strong> @Model.GuestEmail</p>
+                    @if (!string.IsNullOrEmpty(Model.GuestPhone))
+                    {
+                        <p class="mb-1"><strong>Phone:</strong> @Model.GuestPhone</p>
+                    }
+                </div>
+            </div>
+
+            <h5>Order Items</h5>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Price</th>
+                            <th>Quantity</th>
+                            <th class="text-end">Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.OrderItems)
+                        {
+                            <tr>
+                                <td>@item.Product.Name</td>
+                                <td>@item.UnitPrice.ToString("C")</td>
+                                <td>@item.Quantity</td>
+                                <td class="text-end">@((item.UnitPrice * item.Quantity).ToString("C"))</td>
+                            </tr>
+                        }
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <th colspan="3">Total</th>
+                            <th class="text-end">@Model.OrderItems.Sum(i => i.UnitPrice * i.Quantity).ToString("C")</th>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+
+            <div class="mt-4">
+                <a asp-action="Index" class="btn btn-outline-primary">
+                    <i class="bi bi-arrow-left"></i> Track Another Order
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

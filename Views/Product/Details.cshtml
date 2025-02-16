@@ -1,0 +1,76 @@
+@model COMP2139_assign01.Models.Product
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-6">
+            @if (!string.IsNullOrEmpty(Model.ImageUrl))
+            {
+                <img src="@Model.ImageUrl" class="img-fluid rounded" alt="@Model.Name">
+            }
+            else
+            {
+                <div class="bg-light rounded d-flex align-items-center justify-content-center" style="height: 400px;">
+                    <i class="bi bi-image text-muted" style="font-size: 5rem;"></i>
+                </div>
+            }
+        </div>
+        <div class="col-md-6">
+            <h2>@Model.Name</h2>
+            <p class="text-muted">SKU: @Model.SKU</p>
+            
+            <div class="mb-3">
+                <h4 class="text-primary">@Model.Price.ToString("C")</h4>
+            </div>
+            
+            <div class="mb-4">
+                <p>@Model.Description</p>
+            </div>
+
+            <div class="mb-4">
+                <p class="mb-2">Stock Status:</p>
+                @if (Model.Quantity > 0)
+                {
+                    <span class="badge bg-success">In Stock (@Model.Quantity available)</span>
+                }
+                else
+                {
+                    <span class="badge bg-danger">Out of Stock</span>
+                }
+            </div>
+
+            @if (Model.Quantity > 0)
+            {
+                <form asp-area="Guest" asp-controller="Order" asp-action="AddToCart" method="post" class="mb-4">
+                    <input type="hidden" name="productId" value="@Model.ProductId" />
+                    <div class="row g-3 align-items-center">
+                        <div class="col-auto">
+                            <label for="quantity" class="form-label">Quantity:</label>
+                        </div>
+                        <div class="col-auto">
+                            <input type="number" id="quantity" name="quantity" class="form-control" value="1" min="1" max="@Model.Quantity" />
+                        </div>
+                        <div class="col-auto">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-cart-plus"></i> Add to Cart
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            }
+
+            <div class="mt-4">
+                <a asp-action="Edit" asp-route-id="@Model.ProductId" class="btn btn-primary">Edit</a>
+                <a asp-action="Index" class="btn btn-outline-secondary">
+                    <i class="bi bi-arrow-left"></i> Back to Products
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger mt-3">
+        @TempData["Error"]
+    </div>
+}

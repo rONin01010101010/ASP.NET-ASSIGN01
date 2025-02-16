@@ -1,15 +1,24 @@
+using Microsoft.EntityFrameworkCore;
 using COMP2139_assign01.Data;
-using Microsoft.EntityFrameworkCore; 
-using Npgsql.EntityFrameworkCore.PostgreSQL;
+using COMP2139_assign01.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddDbContext<ApplicationDbContext>(options => 
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
-
-
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<CartService>();
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
+
+// Add DbContext
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 var app = builder.Build();
 
@@ -21,20 +30,21 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
-
-
-
 app.UseHttpsRedirection();
+app.UseStaticFiles();
+
 app.UseRouting();
+
+app.UseSession();
 
 app.UseAuthorization();
 
-app.MapStaticAssets();
+app.MapControllerRoute(
+    name: "areas",
+    pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
 
 app.MapControllerRoute(
-        name: "default",
-        pattern: "{controller=Home}/{action=Index}/{id?}")
-    .WithStaticAssets();
-
+    name: "default",
+    pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();

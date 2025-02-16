@@ -1,4 +1,4 @@
-﻿@model COMP2139_assign01.Models.Inventory
+@model COMP2139_assign01.Models.Inventory
 
 @{
     ViewBag.Title = "Inventory Summary";
@@ -13,12 +13,25 @@
         <p>@Model.TotalStock</p>
 
         <h3>Low Stock Items:</h3>
-        <ul>
-            @foreach (var item in Model.LowStockItems)
-            {
-                <li>@item.Name - @item.Quantity</li> 
-            }
-        </ul>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Quantity</th>
+                    <th>Category</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in ViewBag.LowStockItems)
+                {
+                    <tr>
+                        <td>@item.Name</td>
+                        <td>@item.Quantity</td>
+                        <td>@item.category</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
 
         <h3>Categories:</h3>
         <ul>
@@ -29,4 +42,3 @@
         </ul>
     </div>
 </div>
-

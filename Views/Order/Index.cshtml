@@ -1,0 +1,223 @@
+@model IEnumerable<COMP2139_assign01.Models.Order>
+
+<div class="container">
+    <h1 class="mb-4">Orders</h1>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <div class="row mb-4">
+        <!-- Search and Filters -->
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Filters</h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label for="searchTerm" class="form-label">Search</label>
+                        <input type="text" id="searchTerm" class="form-control" 
+                               value="@ViewBag.CurrentSearchTerm" placeholder="Search by name, email, or tracking...">
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Date Range</label>
+                        <div class="input-group mb-2">
+                            <span class="input-group-text">From</span>
+                            <input type="date" id="fromDate" class="form-control" 
+                                   value="@(ViewBag.CurrentFromDate?.ToString("yyyy-MM-dd"))">
+                        </div>
+                        <div class="input-group">
+                            <span class="input-group-text">To</span>
+                            <input type="date" id="toDate" class="form-control" 
+                                   value="@(ViewBag.CurrentToDate?.ToString("yyyy-MM-dd"))">
+                        </div>
+                    </div>
+
+                    <button id="resetFilters" class="btn btn-outline-secondary w-100">
+                        Reset Filters
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Order List -->
+        <div class="col-md-9">
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>
+                                <a href="#" class="sort-link text-dark text-decoration-none" data-sort="date">
+                                    @Html.DisplayNameFor(model => model.OrderDate)
+                                    <i class="bi bi-arrow-down-up"></i>
+                                </a>
+                            </th>
+                            <th>
+                                <a href="#" class="sort-link text-dark text-decoration-none" data-sort="name">
+                                    @Html.DisplayNameFor(model => model.GuestName)
+                                    <i class="bi bi-arrow-down-up"></i>
+                                </a>
+                            </th>
+                            <th>@Html.DisplayNameFor(model => model.GuestEmail)</th>
+                            <th>@Html.DisplayNameFor(model => model.TrackingNumber)</th>
+                            <th>Total Items</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@item.LocalOrderDate.ToString("MM/dd/yyyy HH:mm")</td>
+                                <td>@Html.DisplayFor(modelItem => item.GuestName)</td>
+                                <td>@Html.DisplayFor(modelItem => item.GuestEmail)</td>
+                                <td>@Html.DisplayFor(modelItem => item.TrackingNumber)</td>
+                                <td>@item.OrderItems.Count</td>
+                                <td>
+                                    <div class="btn-group" role="group">
+                                        <a asp-action="Details" asp-route-id="@item.OrderId" 
+                                           class="btn btn-sm btn-outline-primary">Details</a>
+                                        <a asp-action="Edit" asp-route-id="@item.OrderId" 
+                                           class="btn btn-sm btn-outline-secondary">Edit</a>
+                                        <button type="button" class="btn btn-sm btn-outline-danger"
+                                                onclick="confirmDelete(@item.OrderId, '@item.TrackingNumber')">
+                                            Delete
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            @if (!Model.Any())
+            {
+                <div class="alert alert-info">
+                    No orders found matching your criteria.
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirm Delete</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete order <span id="deleteOrderNumber"></span>?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <form id="deleteForm" asp-action="Delete" method="post" style="display: inline;">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" id="deleteOrderId" name="id" />
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Debounce function
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+
+        // Function to update orders list
+        async function updateOrders() {
+            const searchTerm = document.getElementById('searchTerm').value;
+            const fromDate = document.getElementById('fromDate').value;
+            const toDate = document.getElementById('toDate').value;
+            const sortBy = document.getElementById('currentSort')?.value || '';
+
+            const params = new URLSearchParams({
+                searchTerm,
+                fromDate,
+                toDate,
+                sortBy
+            });
+
+            window.location.href = `/Order?${params}`;
+        }
+
+        // Delete confirmation
+        function confirmDelete(orderId, trackingNumber) {
+            document.getElementById('deleteOrderId').value = orderId;
+            document.getElementById('deleteOrderNumber').textContent = trackingNumber;
+            const modal = new bootstrap.Modal(document.getElementById('deleteModal'));
+            modal.show();
+        }
+
+        // Event listeners
+        document.addEventListener('DOMContentLoaded', () => {
+            // Add debounced event listeners
+            const debouncedUpdate = debounce(updateOrders, 300);
+
+            document.getElementById('searchTerm').addEventListener('input', debouncedUpdate);
+            document.getElementById('fromDate').addEventListener('change', updateOrders);
+            document.getElementById('toDate').addEventListener('change', updateOrders);
+
+            // Sort links
+            document.querySelectorAll('.sort-link').forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const sortType = e.currentTarget.dataset.sort;
+                    const currentSort = document.getElementById('currentSort')?.value || '';
+                    
+                    // Toggle sort direction
+                    const newSort = currentSort === sortType ? `${sortType}_desc` : sortType;
+                    
+                    const params = new URLSearchParams(window.location.search);
+                    params.set('sortBy', newSort);
+                    window.location.href = `/Order?${params}`;
+                });
+            });
+
+            // Reset filters
+            document.getElementById('resetFilters').addEventListener('click', () => {
+                document.getElementById('searchTerm').value = '';
+                document.getElementById('fromDate').value = '';
+                document.getElementById('toDate').value = '';
+                window.location.href = '/Order';
+            });
+        });
+
+        // Auto-hide alerts after 5 seconds
+        setTimeout(() => {
+            document.querySelectorAll('.alert').forEach(alert => {
+                const bsAlert = new bootstrap.Alert(alert);
+                bsAlert.close();
+            });
+        }, 5000);
+    </script>
+}

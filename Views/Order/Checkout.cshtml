@@ -1,0 +1,81 @@
+@model COMP2139_assign01.Models.Order
+
+<div class="container">
+    <h1 class="mb-4">Checkout</h1>
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">Guest Information</h5>
+                    <form asp-action="PlaceOrder" method="post">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                        <div class="mb-3">
+                            <label asp-for="GuestName" class="form-label">Name</label>
+                            <input asp-for="GuestName" class="form-control" required />
+                            <span asp-validation-for="GuestName" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="GuestEmail" class="form-label">Email</label>
+                            <input asp-for="GuestEmail" type="email" class="form-control" required />
+                            <span asp-validation-for="GuestEmail" class="text-danger"></span>
+                            <div class="form-text">We'll send your order confirmation and tracking number here.</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="GuestPhone" class="form-label">Phone (Optional)</label>
+                            <input asp-for="GuestPhone" type="tel" class="form-control" />
+                            <span asp-validation-for="GuestPhone" class="text-danger"></span>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary">Place Order</button>
+                            <a asp-action="Cart" class="btn btn-outline-secondary">Back to Cart</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Order Summary</h5>
+                    <div class="table-responsive">
+                        <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Item</th>
+                                    <th>Qty</th>
+                                    <th class="text-end">Price</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.OrderItems)
+                                {
+                                    <tr>
+                                        <td>@item.Product.Name</td>
+                                        <td>@item.Quantity</td>
+                                        <td class="text-end">@((item.UnitPrice * item.Quantity).ToString("C"))</td>
+                                    </tr>
+                                }
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th colspan="2">Total</th>
+                                    <th class="text-end">@Model.OrderItems.Sum(i => i.UnitPrice * i.Quantity).ToString("C")</th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

@@ -1,62 +1,122 @@
-﻿using System.Net.Security;
+using System.Net.Security;
 using COMP2139_assign01.Data;
 using COMP2139_assign01.Models;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace COMP2139_assign01.Controllers
 {
     public class InventoryController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly ILogger<InventoryController> _logger;
 
-        public InventoryController(ApplicationDbContext context)
+        public InventoryController(ApplicationDbContext context, ILogger<InventoryController> logger)
         {
             _context = context;
+            _logger = logger;
         }
-
 
         [HttpGet]
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var inventory = _context.Inventory.ToList();
-            return View(inventory);
-        }
-
-
-        [HttpGet]
-        public IActionResult Summary(Inventory inventory)
-        {
-            var totalStock = _context.Inventory.Sum(i => i.Quantity);
-            var lowStockItems = _context.Inventory.Where(i => i.Quantity < 10).ToList();
-            var categories = _context.Inventory.Select(i => i.category).Distinct().ToList();
-
-
-            Inventory summary = new Inventory
+            try
             {
-                LowStockItems = lowStockItems,
-                category = categories.FirstOrDefault(),
-                TotalStock = totalStock,
-                
-            };
-
-            return View(summary);
-        }
-
-        public IActionResult Delete(int id)
-        {
-            var inventory = _context.Inventory.Find(id);
-
-            if (inventory == null)
-            {
-                return NotFound();
+                var inventory = await _context.Inventory
+                    .OrderBy(i => i.category)
+                    .ThenBy(i => i.Name)
+                    .ToListAsync();
+                return View(inventory);
             }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error retrieving inventory list");
+                TempData["Error"] = "Failed to retrieve inventory list.";
+                return RedirectToAction(nameof(Index));
+            }
+        }
 
+        [HttpGet]
+        public async Task<IActionResult> Summary()
+        {
+            try
+            {
+                var totalStock = await _context.Inventory.SumAsync(i => i.Quantity);
+                var lowStockItems = await _context.Inventory
+                    .Where(i => i.Quantity < 10)
+                    .OrderBy(i => i.Quantity)
+                    .ToListAsync();
+                var categories = await _context.Inventory
+                    .Select(i => i.category)
+                    .Distinct()
+                    .ToListAsync();
 
-            _context.Inventory.Remove(inventory);
+                var summary = new Inventory
+                {
+                    TotalStock = totalStock,
+                    category = categories.FirstOrDefault() ?? string.Empty,
+                    Quantity = lowStockItems.Count
+                };
 
-            return RedirectToAction("Index");
+                ViewBag.LowStockItems = lowStockItems;
+                return View(summary);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error retrieving inventory summary");
+                TempData["Error"] = "Failed to retrieve inventory summary.";
+                return RedirectToAction(nameof(Index));
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Delete(int id)
+        {
+            try
+            {
+                var inventory = await _context.Inventory.FindAsync(id);
+                if (inventory == null)
+                {
+                    TempData["Error"] = "Item not found.";
+                    return RedirectToAction(nameof(Index));
+                }
+
+                return View(inventory);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error retrieving item for deletion");
+                TempData["Error"] = "Failed to retrieve item for deletion.";
+                return RedirectToAction(nameof(Index));
+            }
+        }
+
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            try
+            {
+                var inventory = await _context.Inventory.FindAsync(id);
+                if (inventory == null)
+                {
+                    TempData["Error"] = "Item not found.";
+                    return RedirectToAction(nameof(Index));
+                }
+
+                _context.Inventory.Remove(inventory);
+                await _context.SaveChangesAsync();
+
+                TempData["Success"] = $"Item '{inventory.Name}' has been deleted.";
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error deleting item");
+                TempData["Error"] = "Failed to delete item. Please try again.";
+                return RedirectToAction(nameof(Index));
+            }
         }
 
         [HttpGet]
@@ -67,114 +127,130 @@ namespace COMP2139_assign01.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Add(Inventory inventory)
+        public async Task<IActionResult> Add(Inventory inventory)
         {
             if (ModelState.IsValid)
             {
-                _context.Inventory.Add(inventory);
                 try
                 {
-                    _context.SaveChanges();
+                    _context.Inventory.Add(inventory);
+                    await _context.SaveChangesAsync();
+                    TempData["Success"] = $"Item '{inventory.Name}' has been added successfully.";
+                    return RedirectToAction(nameof(Index));
                 }
                 catch (DbUpdateException ex)
                 {
-                    Console.WriteLine("Failed to update inventory{exception}", ex);
-
+                    _logger.LogError(ex, "Error adding item");
+                    ModelState.AddModelError("", "Failed to add item. Please try again.");
                 }
-                return RedirectToAction("Index");
             }
 
             return View(inventory);
         }
 
         [HttpGet]
-        public IActionResult Edit(int id)
+        public async Task<IActionResult> Edit(int id)
         {
-            var inventory = _context.Inventory.Find(id);
-            if (inventory == null)
+            try
             {
-                return NotFound();
-            }
+                var inventory = await _context.Inventory.FindAsync(id);
+                if (inventory == null)
+                {
+                    TempData["Error"] = "Item not found.";
+                    return RedirectToAction(nameof(Index));
+                }
 
-            return View(inventory);
+                return View(inventory);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error retrieving item for editing");
+                TempData["Error"] = "Failed to retrieve item for editing.";
+                return RedirectToAction(nameof(Index));
+            }
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(int id, [Bind("InventoryId,Quantity,Name,Price,category")] Inventory inventory)
+        public async Task<IActionResult> Edit(int id, [Bind("InventoryId,Quantity,Name,Price,category")] Inventory inventory)
         {
-            //embed the primary key in the edit form at the top of the page (@Html.HiddenFor(model =>model.inventoryID)
-
             if (id != inventory.InventoryId)
             {
-                return NotFound();
+                TempData["Error"] = "Invalid request.";
+                return RedirectToAction(nameof(Index));
             }
 
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _context.Inventory.Update(inventory);
-                    _context.SaveChanges();
+                    _context.Update(inventory);
+                    await _context.SaveChangesAsync();
+                    TempData["Success"] = $"Item '{inventory.Name}' has been updated successfully.";
+                    return RedirectToAction(nameof(Index));
                 }
                 catch (DbUpdateConcurrencyException ex)
                 {
-                    Console.WriteLine($"Error while updating inventory: {ex.Message}");
-
-                    
-                    if (!itemExists(inventory.InventoryId))
+                    _logger.LogError(ex, "Error updating item");
+                    if (!ItemExists(inventory.InventoryId))
                     {
-                        return NotFound();
+                        TempData["Error"] = "Item not found.";
+                        return RedirectToAction(nameof(Index));
                     }
                     else
                     {
-                        throw;
+                        ModelState.AddModelError("", "Failed to update item. Please try again.");
                     }
                 }
-
-                return RedirectToAction("Index");
             }
 
             return View(inventory);
         }
 
-        private bool itemExists(int id)
+        private bool ItemExists(int id)
         {
             return _context.Inventory.Any(e => e.InventoryId == id);
         }
 
         [HttpGet]
-        public IActionResult Search(string Price, string Category, string Name)
+        public async Task<IActionResult> Search(string Price, string Category, string Name)
         {
-            ViewBag.Price = Price;
-            ViewBag.Category = Category;
-            ViewBag.Name = Name;
-
-            var inventoryItems = _context.Inventory.AsQueryable();
-
-            if (decimal.TryParse(Price, out decimal price))
+            try
             {
-                inventoryItems = inventoryItems.Where(i => i.Price <= price);
-            }
+                ViewBag.Price = Price;
+                ViewBag.Category = Category;
+                ViewBag.Name = Name;
 
-            if (!string.IsNullOrEmpty(Category))
+                var inventoryItems = _context.Inventory.AsQueryable();
+
+                if (decimal.TryParse(Price, out decimal price))
+                {
+                    inventoryItems = inventoryItems.Where(i => i.Price <= price);
+                }
+
+                if (!string.IsNullOrEmpty(Category))
+                {
+                    inventoryItems = inventoryItems.Where(i => i.category.Contains(Category));
+                }
+
+                if (!string.IsNullOrEmpty(Name))
+                {
+                    inventoryItems = inventoryItems.Where(i => i.Name.Contains(Name));
+                }
+
+                var result = await inventoryItems
+                    .OrderBy(i => i.category)
+                    .ThenBy(i => i.Name)
+                    .ToListAsync();
+
+                return View(result);
+            }
+            catch (Exception ex)
             {
-                inventoryItems = inventoryItems.Where(i => i.category.Contains(Category));
+                _logger.LogError(ex, "Error searching inventory");
+                TempData["Error"] = "Failed to search inventory.";
+                return RedirectToAction(nameof(Index));
             }
-
-            if (!string.IsNullOrEmpty(Name))
-            {
-                inventoryItems = inventoryItems.Where(i => i.Name.Contains(Name));
-            }
-
-            var result = inventoryItems.ToList();  
-            return View(result);  
-        }
-
-            
         }
     }
-
-        
-        
-    
+}
