@@ -33,7 +33,7 @@
                                     </div>
                                 </div>
                             </td>
-                            <td>${@item.Price:F2}</td>
+                            <td>$@(item.Price.ToString("F2"))</td>
                             <td style="width: 150px;">
                                 <form asp-area="Guest" asp-controller="Order" asp-action="UpdateQuantity" method="post" class="d-flex align-items-center">
                                     <input type="hidden" name="productId" value="@item.ProductId">
@@ -42,7 +42,7 @@
                                            onchange="this.form.submit()">
                                 </form>
                             </td>
-                            <td>${@item.Total:F2}</td>
+                            <td>$@(item.Total.ToString("F2"))</td>
                             <td>
                                 <form asp-area="Guest" asp-controller="Order" asp-action="RemoveFromCart" method="post" style="display: inline;">
                                     <input type="hidden" name="productId" value="@item.ProductId">
@@ -57,7 +57,7 @@
                 <tfoot>
                     <tr>
                         <td colspan="3" class="text-end"><strong>Total:</strong></td>
-                        <td><strong>${@Model.Sum(i => i.Total):F2}</strong></td>
+                        <td><strong>$@(Model.Sum(i => i.Total).ToString("F2"))</strong></td>
                         <td></td>
                     </tr>
                 </tfoot>

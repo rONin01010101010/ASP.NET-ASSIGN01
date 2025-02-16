@@ -38,7 +38,7 @@
                             <p>
                                 Order Date: @Model.LocalOrderDate.ToString("MMM dd, yyyy")<br />
                                 Status: @Model.Status<br />
-                                Total: $@Model.Total.ToString("F2")
+                                Total: $@Model.Total.ToString("N2")
                             </p>
                         </div>
                     </div>
@@ -61,9 +61,9 @@
                                     {
                                         <tr>
                                             <td>@(item.Product?.Name ?? "Unknown Product")</td>
-                                            <td>$@item.UnitPrice.ToString("F2")</td>
+                                            <td>$@item.UnitPrice.ToString("N2")</td>
                                             <td>@item.Quantity</td>
-                                            <td>$@((item.UnitPrice * item.Quantity).ToString("F2"))</td>
+                                            <td>$@((item.UnitPrice * item.Quantity).ToString("N2"))</td>
                                         </tr>
                                     }
                                 }
@@ -71,7 +71,7 @@
                             <tfoot>
                                 <tr>
                                     <td colspan="3" class="text-end"><strong>Total:</strong></td>
-                                    <td><strong>$@Model.Total.ToString("F2")</strong></td>
+                                    <td><strong>$@Model.Total.ToString("N2")</strong></td>
                                 </tr>
                             </tfoot>
                         </table>
