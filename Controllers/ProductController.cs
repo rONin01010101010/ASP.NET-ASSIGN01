@@ -1,5 +1,6 @@
 using COMP2139_assign01.Data;
 using COMP2139_assign01.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -343,5 +344,21 @@ namespace COMP2139_assign01.Controllers
         {
             return _context.Products.Any(e => e.ProductId == id);
         }
+    
+        [Authorize(Policy = "RequireUserRole")] // Both regular users and admins can view products
+        public async Task<IActionResult> Index()
+        {
+            var products = await _context.Products.Include(p => p.Category).ToListAsync();
+            return View(products);
+        }
+        
+        // GET: Products/Details/5
+        //[Authorize(Policy = "RequireUserRole")]
+    
+    
+    
+    
+    
+    
     }
 }

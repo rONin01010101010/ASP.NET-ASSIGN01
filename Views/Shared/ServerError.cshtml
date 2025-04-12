@@ -1,0 +1,38 @@
+﻿@model ErrorViewModel
+@{
+    ViewData["Title"] = "Server Error";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card border-danger">
+                <div class="card-header bg-danger text-white">
+                    <h2 class="mb-0"><i class="bi bi-server me-2"></i>Server Error</h2>
+                </div>
+                <div class="card-body text-center">
+                    <img src="~/images/server-error.svg" alt="Server Error" class="img-fluid mb-3" style="max-height: 200px;" />
+                    <h3 class="text-danger">Something went wrong!</h3>
+                    <p class="lead">@Model.ErrorMessage</p>
+                    <p>Our technical team has been automatically notified and is working to fix the issue.</p>
+                    
+                    @if (Model.ShowRequestId)
+                    {
+                        <p class="small text-muted mt-3">
+                            <strong>Request ID:</strong> <code>@Model.RequestId</code>
+                        </p>
+                    }
+                    
+                    <div class="mt-4">
+                        <a asp-controller="Home" asp-action="Index" class="btn btn-primary me-2">
+                            <i class="bi bi-house-fill me-1"></i> Return to Home
+                        </a>
+                        <a href="javascript:location.reload()" class="btn btn-outline-secondary">
+                            <i class="bi bi-arrow-clockwise me-1"></i> Try Again
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

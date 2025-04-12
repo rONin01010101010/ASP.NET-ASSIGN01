@@ -15,5 +15,8 @@ namespace COMP2139_assign01.Models
 
         // Navigation property
         public ICollection<Product> Products { get; set; } = new List<Product>();
+        
+        public ICollection<ApplicationUserCategory> UserCategories { get; set; }
+
     }
 }

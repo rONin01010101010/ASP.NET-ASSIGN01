@@ -1,0 +1,39 @@
+﻿@model ErrorViewModel
+@{
+    ViewData["Title"] = "Page Not Found";
+    Layout = "_Layout";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card border-warning">
+                <div class="card-header bg-warning text-dark">
+                    <h2 class="mb-0"><i class="bi bi-question-circle-fill me-2"></i>Page Not Found</h2>
+                </div>
+                <div class="card-body text-center">
+                    <img src="~/images/404.svg" alt="Page Not Found" class="img-fluid mb-3" style="max-height: 200px;" />
+                    <h3 class="text-warning">Oops! Page Not Found</h3>
+                    <p class="lead">@Model.ErrorMessage</p>
+                    <p>The page you are looking for might have been removed, had its name changed, or is temporarily unavailable.</p>
+
+                    @if (Model.ShowRequestId)
+                    {
+                        <p class="small text-muted mt-3">
+                            <strong>Request ID:</strong> <code>@Model.RequestId</code>
+                        </p>
+                    }
+
+                    <div class="mt-4">
+                        <a asp-controller="Home" asp-action="Index" class="btn btn-primary me-2">
+                            <i class="bi bi-house-fill me-1"></i> Home
+                        </a>
+                        <a href="javascript:history.back()" class="btn btn-outline-secondary">
+                            <i class="bi bi-arrow-left me-1"></i> Go Back
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
