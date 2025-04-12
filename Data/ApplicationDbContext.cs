@@ -1,21 +1,21 @@
 namespace COMP2139_assign01.Data;
-using COMP2139_assign01.Models; 
+using COMP2139_assign01.Models;
 using Microsoft.EntityFrameworkCore;
-public class ApplicationDbContext : DbContext 
+public class ApplicationDbContext : DbContext
 {
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options){ }
-    
-    public DbSet<Inventory> Inventory { get; set; } 
-    
-    public DbSet<InventoryTask> Tasks { get; set; } 
-    
+
+    public DbSet<Inventory> Inventory { get; set; }
+
+    public DbSet<InventoryTask> Tasks { get; set; }
+
     public DbSet<Product> Products { get; set; }
     public DbSet<Category> Categories { get; set; }
     public DbSet<Order> Orders { get; set; }
     public DbSet<OrderItem> OrderItems { get; set; }
-    
+
     public DbSet<ApplicationUserCategory> UserCategories { get; set; }
-    
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         // Seed Categories
@@ -162,21 +162,19 @@ public class ApplicationDbContext : DbContext
             .WithMany(p => p.OrderItems)
             .HasForeignKey(oi => oi.ProductId);
 
-        
-        modelBuilder.Entity<ApplicationUserCategory>().HasData(products);
+        // Removed the incorrect seeding line for ApplicationUserCategory here
 
-        
         modelBuilder.Entity<ApplicationUserCategory>()
             .HasKey(uc => new { uc.UserId, uc.CategoryId });
-                
+
         modelBuilder.Entity<ApplicationUserCategory>()
             .HasOne(uc => uc.User)
             .WithMany(u => u.UserCategories)
             .HasForeignKey(uc => uc.UserId);
-                
+
         modelBuilder.Entity<ApplicationUserCategory>()
             .HasOne(uc => uc.Category)
             .WithMany(c => c.UserCategories)
             .HasForeignKey(uc => uc.CategoryId);
-    }
-}
+    } // Closing brace for OnModelCreating
+} // Closing brace for ApplicationDbContext

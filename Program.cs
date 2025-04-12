@@ -46,6 +46,12 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options => {
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+//Authorization policies
+builder.Services.AddAuthorization(options => {
+    options.AddPolicy("RequireAdminRole", policy => policy.RequireRole("Admin"));
+    options.AddPolicy("RequireUserRole", policy => policy.RequireRole("User", "Admin"));
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -55,14 +61,8 @@ if (!app.Environment.IsDevelopment())
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
-
 //builder.Services.AddTransient<IEmailSender, EmailSender>();
 
-//Authorization policies
-builder.Services.AddAuthorization(options => {
-    options.AddPolicy("RequireAdminRole", policy => policy.RequireRole("Admin"));
-    options.AddPolicy("RequireUserRole", policy => policy.RequireRole("User", "Admin"));
-});
 
 if (app.Environment.IsDevelopment())
 {
