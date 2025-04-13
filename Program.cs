@@ -77,9 +77,19 @@ try
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddDefaultTokenProviders();
 
+<<<<<<< HEAD
     // Add DbContext
     builder.Services.AddDbContext<ApplicationDbContext>(options =>
         options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+=======
+//Authorization policies
+builder.Services.AddAuthorization(options => {
+    options.AddPolicy("RequireAdminRole", policy => policy.RequireRole("Admin"));
+    options.AddPolicy("RequireUserRole", policy => policy.RequireRole("User", "Admin"));
+});
+
+var app = builder.Build();
+>>>>>>> 060479397516ee85824607d4f92fac7e29805831
 
     // Uncomment and implement email sender
     // builder.Services.AddTransient<IEmailSender, EmailSender>();
@@ -150,11 +160,44 @@ try
 
     app.Run();
 }
+<<<<<<< HEAD
 catch (Exception ex)
+=======
+//builder.Services.AddTransient<IEmailSender, EmailSender>();
+
+
+if (app.Environment.IsDevelopment())
+>>>>>>> 060479397516ee85824607d4f92fac7e29805831
 {
     Log.Fatal(ex, "Application terminated unexpectedly");
 }
 finally
 {
+<<<<<<< HEAD
     Log.CloseAndFlush();
 }
+=======
+    app.UseExceptionHandler("/Home/Error");
+    app.UseStatusCodePagesWithReExecute("/Home/StatusCode", "?statusCode={0}");
+    app.UseHsts();
+}
+
+app.UseHttpsRedirection();
+app.UseStaticFiles();
+
+app.UseRouting();
+
+app.UseSession();
+
+app.UseAuthorization();
+
+app.MapControllerRoute(
+    name: "areas",
+    pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Home}/{action=Index}/{id?}");
+
+app.Run();
+>>>>>>> 060479397516ee85824607d4f92fac7e29805831
