@@ -41,7 +41,7 @@
                         @if (User.IsInRole("Admin"))
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="Index">Admin</a>
+                                <a class="nav-link text-dark" asp-area="User" asp-controller="InitializeAsync" asp-action="Index">Admin</a>
                             </li>
                         }
                     </ul>
@@ -62,10 +62,10 @@
                                     </a>
                                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
                                         <li><a class="dropdown-item" asp-area="User" asp-controller="Account" asp-action="Profile">My Profile</a></li>
-                                        <li><a class="dropdown-item" asp-area="Guest" asp-controller="Order" asp-action="MyOrders">My Orders</a></li>
+                                        <li><a class="dropdown-item" asp-area="User" asp-controller="Account" asp-action="MyOrders">My Orders</a></li>
                                         <li><hr class="dropdown-divider"></li>
                                         <li>
-                                            <form asp-area="User" asp-controller="Account" asp-action="Logout" method="post">
+                                                <form asp-area="User" asp-controller="Account" asp-action="Logout" method="post">
                                                 <button type="submit" class="dropdown-item">Logout</button>
                                             </form>
                                         </li>
@@ -75,7 +75,7 @@
                             else
                             {
                                 <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="User" asp-controller="Account" asp-action="Login">
+                                        <a class="nav-link text-dark" asp-area="User" asp-controller="Account" asp-action="Login">
                                         <i class="bi bi-box-arrow-in-right"></i> Login
                                     </a>
                                 </li>

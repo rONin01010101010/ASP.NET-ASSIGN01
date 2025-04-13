@@ -8,6 +8,8 @@ namespace COMP2139_assign01.Models
         [Key]
         public int OrderId { get; set; }
 
+        public int UserId { get; set; }
+        
         [Required]
         [Display(Name = "Order Number")]
         public string OrderNumber { get; set; } = string.Empty;
